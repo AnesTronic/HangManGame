@@ -205,10 +205,9 @@ const container = document.getElementById('alphabet-container');
 // math and floor combined  generate  a random index within an arrays range
 const randomIndex = Math.floor(Math.random() * countries.length);
 const randomCountry = countries[randomIndex];
-
 console.log(randomCountry);
 console.log(randomCountry.length);
-
+const displayedCountry = randomCountry.replace(/\s/g, '+');
 const alphabet = Array.from({ length: 26 }, (_, i) => String.fromCharCode(97 + i));
 console.log(alphabet);
 
@@ -230,34 +229,79 @@ function findAllIndexes(word, letter) {
 const wordDisplay = document.getElementById("word-display");
 const attempotsLeftDisplay = document.getElementById("attempts-left");
 const letterButtonsContainer = document.getElementById("alphabet-container");
+const startButton = document.getElementById("start-button");
+const gameMessages = document.getElementById("status-message");
 
 const maxAttempts = 8;
 let wrongGuesses = 0;
 let currentWordState = Array(randomCountry.length).fill("_");
+  for (let i = 0; i < displayedCountry.length; i++){
+    if (displayedCountry[i] === '+'){
+      currentWordState[i] = '+';
+    }
+  }
 
 wordDisplay.textContent = currentWordState.join(" ");
 attempotsLeftDisplay.textContent = maxAttempts - wrongGuesses;
 function updateWordDisplay(letter,positions) {
     positions.forEach(index =>{
-        currentWordState[index] = letter.toupperCase();
+        currentWordState[index] = letter.toUpperCase();
     });
     wordDisplay.textContent = currentWordState.join(" ");
 }
+function disableAllLetterButtons(){
+  const buttons = letterButtonsContainer.querySelectorAll('button');
+  buttons.forEach(btn => {
+    btn.disabled = true;
+  });
+}
+function startGame() {
+  letterButtonsContainer.innerHTML = '';
+  gameMessages.textContent = '';
+  wrongGuesses = 0;
+  const randomIndex = Math.floor(Math.random() * countries.length);
+  const randomCountry = countries[randomIndex];
+  const displayedCountry = randomCountry.replace(/\s/g, '+');
+  currentWordState = Array(displayedCountry.length).fill("_");
+  for (let i = 0; i < displayedCountry.length; i++){
+    if (displayedCountry[i] === '+'){
+      currentWordState[i] = '+';
+    }
+  }
+  wordDisplay.textContent = currentWordState.join(" ");
+  attempotsLeftDisplay.textContent = maxAttempts - wrongGuesses
 
 // Loop through the alphabet(A to Z) and create a button for each letter
 alphabet.forEach(letter => {
   const button = document.createElement('button');
   button.textContent = letter;
   container.appendChild(button);
-  button.addEventListener('click', () => {
-    button.disabled = true;
-     const positions = findAllIndexes(randomCountry, letter);
+  button.addEventListener('click', (e) => {
+    e.target.disabled = true;
+    const letterToGuess = letter.toLowerCase();
+     const positions = findAllIndexes(randomCountry, letterToGuess);
 
   if (positions.length > 0) {
     console.log(`Letter "${letter}" found at positions: ${positions.join(', ')}`);
+          updateWordDisplay(letter,positions);
+          if(!currentWordState.includes("_")){
+            gameMessages.textContent = "Congradulations, you guessed the word!";
+             //alert("Congradulations, you guessed the word!");
+             gameMessages.classList.add('win')
+            disableAllLetterButtons();
+          }
   } else {
     console.log(`Letter "${letter}" not found in the word.`);
+        wrongGuesses++;
+        attempotsLeftDisplay.textContent = maxAttempts - wrongGuesses;
+        if (wrongGuesses >= maxAttempts){
+          gameMessages.textContent = `You lost! The word was: ${randomCountry}`//alert(`You lost! The word was: ${randomCountry}`);
+          gameMessages.classList.add('lost')
+          disableAllLetterButtons();
+        }
   }
   });
 });
-
+}
+startGame();
+startButton.addEventListener('click',startGame);

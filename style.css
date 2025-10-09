@@ -5,7 +5,7 @@ justify-content: center;
 align-items: center;
 min-height: 100vh;
 margin: 0;
-background-color: #f4f4f9;
+background-image: url('./assets/vecteezycountry-name-world-map-background-revgr0223_generated.jpg');
 }
 #game-container {
 background: #fff;
@@ -21,7 +21,10 @@ h1 {
 color: #333;
 margin-bottom: 20px;
 }
-
+#status-message{
+    font-size: 40px;
+    
+}
 #word-display {
 font-size: 2em;
 letter-spacing: 10px;
@@ -36,6 +39,13 @@ flex-wrap: wrap;
 justify-content: center;
 gap: 5px;
 margin: 20px 0;
+}
+
+.lost{
+    color: red;
+}
+.win {
+    color: #28a745;
 }
 
 .keyboard-button {
