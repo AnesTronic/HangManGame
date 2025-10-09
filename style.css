@@ -79,4 +79,17 @@ border: none;
 border-radius: 5px;
 cursor: pointer;
 margin-top: 10px;
+width: 400px;
+height: 40px;
+
+}
+
+button {
+    height: 30px;
+    width: 30px;
+    background-color: #ebf3fb;
+    color: rgb(39, 31, 31);
+    font-size: 20px;
+    border-radius: 5px;
+    margin: 5px;
 }
